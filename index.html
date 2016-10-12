@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Angular 2 Tutorial</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 1. Definimos los Estilos CSS-->
+    <link rel="stylesheet" href="styles.css">
+    <!-- 2. Cargamos las librería JavaScript -->
+     <!-- 2.1. Polyfill(s) para soportar viejos browsers -->
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+     <!-- 2.2. Las siguientes 2 libreías son requeridas por Angular-->
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+     <!-- 2.3. Cargamos el SystemJS que es nuestro Module Loader-->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+     <!-- 2.4. Cargamos la configuración a usar en el SystemJS -->
+    <script src="systemjs.config.js"></script>
+    <!-- 3. Cargamos el modulo en el que se define nuestra Aplicación Angular 2 -->
+    <script>
+      System.import('app').catch(function(err){ console.error(err); });
+    </script>
+  </head>
+  <!-- 4. Desplegamos nuestra app -->
+  <body>
+    <mi-app>Cargando...</mi-app>
+  </body>
+</html>
