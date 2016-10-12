@@ -35,4 +35,8 @@ typings
 .npm
 
 # Optional REPL history
+<<<<<<< HEAD
 .node_repl_history
+=======
+.node_repl_history
+>>>>>>> f1fb64e6895780d49f4768ad359e0d03ecd69359
