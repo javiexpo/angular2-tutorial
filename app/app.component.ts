@@ -13,11 +13,36 @@ import { Component } from '@angular/core';
 */
 @Component({
   selector: 'mi-app',
-  template: '<h1>Este es mi primer componente Angular 2</h1>'
+  template: `
+      <h1>{{title}}</h1>
+      <table>
+        <thead>
+          <tr>
+            <td>Nombre del Producto</td>
+            <td>Cantidad</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{item.productName}}</td>
+            <td>{{item.cantidad}}</td>
+          </tr>
+        </tbody>
+      </table>
+      `
+
 })
 
 /**
  * Declaramos el AppComponent bajo la clase AppComponent
  * y lo exportamos para que sea accesible 
  */
-export class AppComponent { }
+export class AppComponent { 
+  title = 'Mi Shopping List';
+  items: Object[] = [ {productName: 'Manzanas', cantidad: 5}, 
+            {productName: 'Pera', cantidad: 2},
+            {productName: 'Banana', cantidad: 1},
+            {productName: 'Kiwi', cantidad: 3},
+            {productName: 'Melocoton', cantidad: 10}
+          ];
+}
