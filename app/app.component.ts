@@ -1,8 +1,14 @@
 /** 
- * Importamos el modulo Component de la librería  
- * @angular/core
+ * Importamos de la libraería @angular/core los modulos
+ * Component: Usado para definir el componente
+ * OnInit: usado para 
+ * OnInit: usado para implementar la interfaz OnInit y con ella el método ngOnInit()
+ * 
+ * Importamos de la librería rxjs/Rx el modulo:
+ * Observable: usado para suscrubirnos a un Observable Timer
 */
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 
 /** 
  * Definimos el componente haciendo uso del decorator @Component   
@@ -13,36 +19,64 @@ import { Component } from '@angular/core';
 */
 @Component({
   selector: 'mi-app',
-  template: `
-      <h1>{{title}}</h1>
-      <table>
-        <thead>
-          <tr>
-            <td>Nombre del Producto</td>
-            <td>Cantidad</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of items">
-            <td>{{item.productName}}</td>
-            <td>{{item.cantidad}}</td>
-          </tr>
-        </tbody>
-      </table>
-      `
-
+  templateUrl: 'app/app.template.html'
 })
 
 /**
  * Declaramos el AppComponent bajo la clase AppComponent
  * y lo exportamos para que sea accesible 
+ * 
+ * 
  */
-export class AppComponent { 
+export class AppComponent  implements OnInit{ 
+  //Titulo del Componente
   title = 'Mi Shopping List';
-  items: Object[] = [ {productName: 'Manzanas', cantidad: 5}, 
+  //Mini BD de productos con sus cantidades
+  itemsDB: Object[] = [
+            {productName: 'Manzanas', cantidad: 5}, 
             {productName: 'Pera', cantidad: 2},
             {productName: 'Banana', cantidad: 1},
             {productName: 'Kiwi', cantidad: 3},
-            {productName: 'Melocoton', cantidad: 10}
+            {productName: 'Melocoton', cantidad: 10}, 
+            {productName: 'Patatas', cantidad: 10}, 
+            {productName: 'Jamón', cantidad: 2},
+            {productName: 'Queso', cantidad: 2},
+            {productName: 'Tomates', cantidad: 5},
+            {productName: 'Pimientos', cantidad: 1}
           ];
+  //Array de Items que se han de mostrar en pantalla 
+  items: Object[] = [];
+
+  _myInterval = null;
+
+  ngOnInit(): void {
+    //ngOnInit es un método se ejecuta cuando el componente 
+    //esta completamente instanciado
+
+    /**
+     * Instanciamos un Observable.timer cuya ejecucion tenga 
+     * un retraso de 1 segundo (1000 milisegundos)
+     * y se re-ejecute cada 3 segundos (3000 milisegundos)
+     * y en cada ejecución llamará al método _pickRandomItems   
+     * */
+    let timer = Observable.timer(1000,3000);
+    timer.subscribe(t=> {
+        this._pickRandomItems();
+    });  
+  }
+
+  constructor() {
+    //this._myInterval = setInterval(this._pickRandomItems(), 3000);
+  }
+
+  _pickRandomItems(): void {
+    //Método que determian de foram aleatoria los items 
+    //que se han de mostrar en pantalla
+    this.items = [];
+    let itemsCount = Math.floor((Math.random() * 10) + 1);
+    for (var index = 0; index < itemsCount; index++) {
+      let item = this.itemsDB[Math.floor((Math.random() * 9) + 0)];
+      this.items.push(item);
+    }
+  }
 }

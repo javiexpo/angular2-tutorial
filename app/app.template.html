@@ -1,0 +1,15 @@
+<h1>{{title}}</h1>
+<table class="table table-striped">
+<thead>
+    <tr>
+    <td><strong>Producto</strong></td>
+    <td><strong>Cantidad</strong></td>
+    </tr>
+</thead>
+<tbody>
+    <tr *ngFor="let item of items">
+    <td>{{item.productName}}</td>
+    <td>{{item.cantidad}}</td>
+    </tr>
+</tbody>
+</table>
