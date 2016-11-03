@@ -25,10 +25,8 @@ import { Observable } from 'rxjs/Rx';
 /**
  * Declaramos el AppComponent bajo la clase AppComponent
  * y lo exportamos para que sea accesible 
- * 
- * 
  */
-export class AppComponent  implements OnInit{ 
+export class AppComponent  implements OnInit {
   //Titulo del Componente
   title = 'Mi Shopping List';
   //Mini BD de productos con sus cantidades
@@ -49,6 +47,11 @@ export class AppComponent  implements OnInit{
 
   _myInterval = null;
 
+  newProduct: Product = {
+    productName: "",
+    cantidad: 0
+  }
+
   ngOnInit(): void {
     //ngOnInit es un método se ejecuta cuando el componente 
     //esta completamente instanciado
@@ -59,14 +62,27 @@ export class AppComponent  implements OnInit{
      * y se re-ejecute cada 3 segundos (3000 milisegundos)
      * y en cada ejecución llamará al método _pickRandomItems   
      * */
-    let timer = Observable.timer(1000,3000);
+    /*let timer = Observable.timer(1000,3000);
     timer.subscribe(t=> {
         this._pickRandomItems();
-    });  
+    });*/  
   }
 
   constructor() {
     //this._myInterval = setInterval(this._pickRandomItems(), 3000);
+  }
+
+  addProduct():void {
+    //Verificamos si el usuario ha introducido un nombre de producto
+    if (this.newProduct.productName === ""){
+      return;
+    }
+    //Verificamos si el usuario ha introducido una cantidad
+    if (this.newProduct.cantidad === 0){
+      return;
+    }
+    //Agreagmos el nuevo producto y su cantidad a la lista de productos
+    this.items.push(this.newProduct);
   }
 
   _pickRandomItems(): void {
@@ -79,4 +95,9 @@ export class AppComponent  implements OnInit{
       this.items.push(item);
     }
   }
+}
+
+export class Product {
+  productName: string;
+  cantidad: number;
 }

@@ -1,4 +1,28 @@
 <h1>{{title}}</h1>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <label>Producto:</label>
+            </span>
+            <input type="text" placeholder="Nombre del producto" class="form-control" id="productName" [(ngModel)]="newProduct.productName">
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <label>Cantidad:</label>
+            </span>
+            <input type="ammount" class="form-control" id="cantidad" [(ngModel)]="newProduct.cantidad">
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <button type="button" class="btn btn-primary btn-md glyphicon glyphicon-plus" (click)="addProduct()"></button>
+        </div>
+    </div>
+</div>
+
 <table class="table table-striped">
 <thead>
     <tr>
