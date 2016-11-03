@@ -81,9 +81,19 @@ export class AppComponent  implements OnInit {
     if (this.newProduct.cantidad === 0){
       return;
     }
-    //Agregamos el nuevo producto y su cantidad a la lista de productos
-    this.items.push(this.newProduct);
-  }
+    
+    //Creamos un nueva instancia del Product
+    let newProd: Product = new Product();
+    //Agregamos al nuevo producto, el nombre y la cantidad informada por el usuario
+    newProd.productName = this.newProduct.productName;
+    newProd.cantidad = this.newProduct.cantidad;
+    //Agregamos en nuevo producto a la lista
+    this.items.push(newProd);
+
+    //Blanqueamos los INPUTS
+    this.newProduct.cantidad = 0;
+    this.newProduct.productName = "";
+}
 
   _pickRandomItems(): void {
     //Método que determian de foram aleatoria los items 
