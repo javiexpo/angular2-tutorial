@@ -81,7 +81,7 @@ export class AppComponent  implements OnInit {
     if (this.newProduct.cantidad === 0){
       return;
     }
-    //Agreagmos el nuevo producto y su cantidad a la lista de productos
+    //Agregamos el nuevo producto y su cantidad a la lista de productos
     this.items.push(this.newProduct);
   }
 
