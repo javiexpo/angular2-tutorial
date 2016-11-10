@@ -1,6 +1,10 @@
+//Importamos el objeto Injectable de angular/core para poder hacer uso del Decorator
 import { Injectable } from '@angular/core';
+
+//Importamos el tipo de objeto Product el componente 
 import { Product } from './app.component';
 
+//Declaramos 
 @Injectable()
 export class ListService {
    //Mini BD de productos con sus cantidades
@@ -17,10 +21,17 @@ export class ListService {
         {productName: 'Pimientos', cantidad: 1}
         ];
 
+
+    //Listado de Items activos en la lista.
     items = [];
 
+    //Método Constructor sin parametros necesario para lograr la inyeccion e instanciamietno 
+    //del servicio en los componentes donde se necesite   
     constructor() { }
 
+    //Método para obtener del servicio los items activos en la lista
+    //Este método devuelve una Promises con lo cual podemos manejar de 
+    //ser necesario peticiones asincronas   
     getItems(): Promise<Product[]> {
       return Promise.resolve(this.items);
     }
@@ -36,6 +47,9 @@ export class ListService {
         }
     }
 
+    //Método para aregar items a la lista de items activos
+    //Este método devuelve una Promises con lo cual podemos manejar de 
+    //ser necesario peticiones asincronas
     addProduct(newProduct: Product): Promise<Product[]> {      
         //Creamos un nueva instancia del Product
         let newProd: Product = new Product();
@@ -44,6 +58,7 @@ export class ListService {
         newProd.cantidad = newProduct.cantidad;
         //Agregamos en nuevo producto a la lista
         this.items.push(newProd);
+        //resolvemos la Promise retornando los items activo incluyendo el item agreagdo
         return Promise.resolve(this.items);
     }
 }
