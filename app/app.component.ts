@@ -9,6 +9,7 @@
 */
 import { Component, OnInit} from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { ListService } from './app.service';
 
 /** 
  * Definimos el componente haciendo uso del decorator @Component   
@@ -19,7 +20,9 @@ import { Observable } from 'rxjs/Rx';
 */
 @Component({
   selector: 'mi-app',
-  templateUrl: 'app/app.template.html'
+  templateUrl: 'app/app.template.html',
+  //Con la porpiedad providers inyectamos los servicios que usa este componete 
+  providers: [ListService]
 })
 
 /**
@@ -29,21 +32,9 @@ import { Observable } from 'rxjs/Rx';
 export class AppComponent  implements OnInit {
   //Titulo del Componente
   title = 'Mi Shopping List';
-  //Mini BD de productos con sus cantidades
-  itemsDB: Object[] = [
-            {productName: 'Manzanas', cantidad: 5}, 
-            {productName: 'Pera', cantidad: 2},
-            {productName: 'Banana', cantidad: 1},
-            {productName: 'Kiwi', cantidad: 3},
-            {productName: 'Melocoton', cantidad: 10}, 
-            {productName: 'Patatas', cantidad: 10}, 
-            {productName: 'Jamón', cantidad: 2},
-            {productName: 'Queso', cantidad: 2},
-            {productName: 'Tomates', cantidad: 5},
-            {productName: 'Pimientos', cantidad: 1}
-          ];
+  
   //Array de Items que se han de mostrar en pantalla 
-  items: Object[] = [];
+  items: Product[] = [];
 
   _myInterval = null;
 
@@ -55,6 +46,8 @@ export class AppComponent  implements OnInit {
   ngOnInit(): void {
     //ngOnInit es un método se ejecuta cuando el componente 
     //esta completamente instanciado
+
+    this.listService.getItems().then(items => this.items = items);
 
     /**
      * Instanciamos un Observable.timer cuya ejecucion tenga 
@@ -68,8 +61,10 @@ export class AppComponent  implements OnInit {
     });*/  
   }
 
-  constructor() {
-    //this._myInterval = setInterval(this._pickRandomItems(), 3000);
+  //Usamos los parámetros del contrucytor del componente para
+  // instanciar el o los servicios 
+  constructor(private listService: ListService) {
+    
   }
 
   addProduct():void {
@@ -82,29 +77,13 @@ export class AppComponent  implements OnInit {
       return;
     }
     
-    //Creamos un nueva instancia del Product
-    let newProd: Product = new Product();
-    //Agregamos al nuevo producto, el nombre y la cantidad informada por el usuario
-    newProd.productName = this.newProduct.productName;
-    newProd.cantidad = this.newProduct.cantidad;
-    //Agregamos en nuevo producto a la lista
-    this.items.push(newProd);
-
-    //Blanqueamos los INPUTS
-    this.newProduct.cantidad = 0;
-    this.newProduct.productName = "";
-}
-
-  _pickRandomItems(): void {
-    //Método que determian de foram aleatoria los items 
-    //que se han de mostrar en pantalla
-    this.items = [];
-    let itemsCount = Math.floor((Math.random() * 10) + 1);
-    for (var index = 0; index < itemsCount; index++) {
-      let item = this.itemsDB[Math.floor((Math.random() * 9) + 0)];
-      this.items.push(item);
-    }
+    this.listService.addProduct(this.newProduct).then(items => {
+      this.items = items
+      this.newProduct.cantidad = 0;
+      this.newProduct.productName = "";
+    });
   }
+  
 }
 
 export class Product {
