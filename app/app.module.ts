@@ -11,6 +11,7 @@ import { AppComponent }   from './app.component';
 /**Importamos el modulo FormsModule */
 import { FormsModule } from '@angular/forms';
 
+
 /*
 Haciendo uso del decorator @NgModule declaramos un módulo y en el parámetro array
 "imports"" inyectamos los módulos de los cuales depende nuestra app, en este caso el modulo 
