@@ -9,13 +9,13 @@ import { Product } from './app.component';
 export class ListService {
     //Nombre de la BD
     static DATABASE_NAME = 'shoppingListDB';
+    //Vrsión de la Base da datos
     static DATABASE_VERSION = 2;
     //Nombre del Store o Tabla de items
     static ITEMS_TABLE = 'items';
 
     //Objeto de IndexedDB  
     db;
-    storeReady = false;
 
     //Mini BD de productos con sus cantidades
     itemsDB: Product[] = [
@@ -72,7 +72,7 @@ export class ListService {
 
         //Agregamos el nuevo item (producto, cantidad) a la IndexedDB
         this.addProductToDB(newProd);
-
+        //Agregamos el nuevo item (producto, cantidad) al array de Items 
         this.items.push(newProd);
          
         //resolvemos la Promise retornando los items activo incluyendo el item agreagdo
@@ -82,22 +82,33 @@ export class ListService {
     initIndexedDB(){
         //Obtenemos una referencia del servicio  
         var self = this;
+        //Verificamos si el Browser en el que se ejecuta la aplicacion soporta IndexedDB
         if (!window.indexedDB) {
+            //En caso de que no soporte lo notificamos con alert al usuario
             window.alert("Su navegador no soporta una versión estable de indexedDB.");
             return;
         } else {
+            //En caso de que el Browser si soporte IndexedBD creamos/instaciamos nuestra BD 
+            //con el método open pasandole el nombre y la versión de la misma
             var request = window.indexedDB.open(ListService.DATABASE_NAME, ListService.DATABASE_VERSION);
+            //Definimos un callback del evemto onupgradeneeded para saber cuando esta lista 
+            //la BD para craer el o los Store necesarios     
             request.onupgradeneeded = function(event) {
                 self.db = request.result;
                 if(self.db != null) {
+                    //Llamamos al método para crear el o los Stores
                     self.createItemsStore();
                 }
             };
+            //Definimos un callback del evento onerror para saber si ha ocurrido algun error y 
+            //notificarlo al usario con un alert
             request.onerror = function(event) {
               window.alert("onError" + request.error);
             };
+            //Definimos un callback del evento onsuccess para saber que hemos instanciado la BD correctamente 
             request.onsuccess = function(event) {
                 self.db = request.result;
+                //Llamamos la método para leer todos los items (Productos y Cantidades) que tenemos almacenados
                 self.loadAllItems();
             };
         }
@@ -107,22 +118,31 @@ export class ListService {
         // Creamos el Items Store, el cual funciona como una tabla para almacenar 
         //los datos de proudctos y acntidades
         var objectStore = this.db.createObjectStore(ListService.ITEMS_TABLE, { autoIncrement : true });
+        //Definimos un campo o indice para guardar los nombres de los produtos 
         objectStore.createIndex("productName", "productName", { unique: true });
+        //Definimos un campo o indice para guardar las cantidades de los produtos
         objectStore.createIndex("cantidad", "cantidad", { unique: false });
+        //Implementamos un callback para el evento oncomplete con la finalidad de saber cuando 
+        //se ha logrado crear el Store 
         objectStore.transaction.oncomplete = function(event) {
-            this.storeReady = true;
+            //Aqui el store ya ha esta creado y listo para ser usado
         }
     }
 
     addProductToDB(newProd: Product){
         var self = this;
-        // Almacenamos los valores del nuevo producto y su cantidad en el Items Store 
+        //Almacenamos los valores del nuevo producto y su cantidad en el Items Store
+        //mediante un objeto transaction al Store items de tipo readwrite
         var itemObjectStore = this.db.transaction(ListService.ITEMS_TABLE, "readwrite").objectStore(ListService.ITEMS_TABLE);
+        //Con el objeto del Items Store creamos una peticion de tipo inserción de datos usando el método add del objectStore   
         var req = itemObjectStore.add(newProd);
+        //Implementamos un callback para el evento onsuccess para saber cuando hemos agregado con éxito el nuevo objeto Product 
         req.onsuccess = function(event) {
-            //window.alert("addProductToDB onSuccess" + req.result);
+            //Aqui sabemos que se ha agregado con éxito
         };
 
+        //Implementamos un callback para el evento onerror para saber si ha ocurrido algun error durante la inserción del objeto
+        //y en caso tal lo notificamos al usaurio con un alert
         req.onerror = function(event) {
             window.alert("addProductToDB onError" + req.error);
         };
@@ -130,7 +150,11 @@ export class ListService {
 
     loadAllItems() {
         var self = this;
+        //Obtenemos una referencia del Store items mediante una transaction al Store items de tipo readonly
+        //ya que lo que buscamos es solo leer el contenido del mismo
         var itemObjectStore = self.db.transaction(ListService.ITEMS_TABLE, "readonly").objectStore(ListService.ITEMS_TABLE);
+        //Con la referencia del Store item abrimos un cursor para iterar sobre cada uno de los obejto Product 
+        //que contiene el Store y lo agreamos a nuetro array de items   
         itemObjectStore.openCursor().onsuccess = function(event) {
           var cursor = event.target.result;
           if (cursor) {
@@ -138,7 +162,7 @@ export class ListService {
             cursor.continue();
           }
           else {
-            //window.alert("Got all customers: " + self.items);
+            //Aqui ya hemos culminado de iterar sobre todos los Items guardado
           }
         };
     }
